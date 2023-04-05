@@ -1,6 +1,6 @@
 <?php
 
-function setInternalServerError($errno, $errstr, $errfile, $errline) {
+function setInternalServerError($errno = null, $errstr = null , $errfile = null , $errline = null) {
 
     http_response_code(500);
     echo'<h1>Error</h1>';
@@ -8,14 +8,22 @@ function setInternalServerError($errno, $errstr, $errfile, $errline) {
     if (!DEBUG) {
         exit;
     }
+
+    // if (is_object($errno)) {
+    //     $err = $errno;
+    //     $errno = $err->getCode();
+    //     $errstr = $err->getMessage();
+    //     $errfile = $err->getFile();
+    //     $errline = $err->getLIne();
+    // }
     
-    // echo'<pre>';print_r($errno);exit;
+    
     echo'<span style="font-weigth: bold; color: red"';
     switch ($errno) {
 
         case E_USER_ERROR:
             echo'<strong>ERROR</strong> [' . $errno . '] ' . $errstr . "<br>\n";
-            echo'Fatal error on line' . $errline . ' in file ' . $errfile;
+             echo'Fatal error on line' . $errline . ' in file ' . $errfile;
             break;
 
         case E_USER_WARNING:
@@ -28,6 +36,7 @@ function setInternalServerError($errno, $errstr, $errfile, $errline) {
 
         default:
             echo'Unknow error type: [' . $errno . '] ' . $errstr . "<br>\n";
+            echo'on line' . $errline . ' in file ' . $errfile;
             break;
     }
     echo'</span>';
@@ -43,7 +52,9 @@ function setInternalServerError($errno, $errstr, $errfile, $errline) {
         }
     }
     echo'</ul>';
+
+    
 }
 
-//set_error_handler('setInternalServerError');
-//set_exception_handler('setInternalServerError');
+set_error_handler('setInternalServerError');
+set_exception_handler('setInternalServerError');
